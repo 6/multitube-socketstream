@@ -6,8 +6,6 @@ window.onYouTubePlayerReady = (player_id) ->
   ytplayer = document.getElementById("ytPlayer")
   ytplayer.setVolume(50)
 
-ss.rpc "app.room_data", room_s, (data) ->
-  console.log "TODO room data cb", data
 
 $("#room-form").submit (e) ->
   e.preventDefault()
