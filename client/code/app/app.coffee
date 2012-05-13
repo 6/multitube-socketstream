@@ -1,47 +1,29 @@
-### QUICK CHAT DEMO ####
+current_yt_id = undefined
+ytplayer = undefined
 
-# Delete this file once you've seen how the demo works
+# This function is automatically called by the player once it loads
+window.onYouTubePlayerReady = (player_id) ->
+  ytplayer = document.getElementById("ytPlayer")
+  ytplayer.setVolume(50)
 
-# Listen out for newMessage events coming from the server
-ss.event.on 'newMessage', (message) ->
+ss.rpc "app.room_data", room_s, (data) ->
+  console.log "TODO room data cb", data
 
-  # Example of using the Hogan Template in client/templates/chat/message.jade to generate HTML for each message
-  html = ss.tmpl['chat-message'].render({message: message, time: -> timestamp() })
+$("#room-form").submit (e) ->
+  e.preventDefault()
+  new_room = $.trim($("#room-name").val())
+  if new_room? and new_room isnt room_s
+    #TODO use pushState or just location.hash
+    window.location.href = "#{window.location.origin}/#{new_room}"
 
-  # Append it to the #chatlog div and show effect
-  $(html).hide().appendTo('#chatlog').slideDown()
+$("#yt-form").submit (e) ->
+  e.preventDefault()
+  yt_id = yt_id_from_url($("#yt-link").val())
+  return alert("That doesn't appear to be a valid YouTube link") unless yt_id?
+  return alert("That video is currently playing") if current_yt_id is yt_id
+  current_yt_id = yt_id
+  ytplayer.loadVideoById(yt_id)
 
-
-# Show the chat form and bind to the submit action
-$('#demo').on 'submit', ->
-
-  # Grab the message from the text box
-  text = $('#myMessage').val()
-
-  # Call the 'send' funtion (below) to ensure it's valid before sending to the server
-  exports.send text, (success) ->
-    if success
-      $('#myMessage').val('') # clear text box
-    else
-      alert('Oops! Unable to send message')
-
-
-# Demonstrates sharing code between modules by exporting function
-exports.send = (text, cb) ->
-  if valid(text)
-    ss.rpc('demo.sendMessage', text, cb)
-  else
-    cb(false)
-
-
-# Private functions
-
-timestamp = ->
-  d = new Date()
-  d.getHours() + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds())
-
-pad2 = (number) ->
-  (if number < 10 then '0' else '') + number
-
-valid = (text) ->
-  text && text.length > 0
+yt_id_from_url = (url) ->
+  match = /(?:youtube.com\/watch\?[^\s]*v=|youtu.be\/)([-_\w]+)/.exec url
+  if match? then match[1] else null

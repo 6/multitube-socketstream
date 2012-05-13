@@ -1,18 +1,24 @@
 !!! 5
 html(lang="en")
   head
+    script(src="http://www.google.com/jsapi")
     != SocketStream
     meta(charset="utf-8")
     title Welcome
+    script
+      window.google.load("swfobject", "2.2");
+      window.google.setOnLoadCallback(function(ev) {
+        var params = {allowScriptAccess: "always"};
+        var atts = {id: "ytPlayer"};
+        var url = "http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=player1&version=3";
+        swfobject.embedSWF(url, "video-wrap", "540", "320", "9", null, null, params, atts);
+      });
   body
     #content
-      a(href='https://github.com/socketstream/socketstream')
-        img(src='/images/logo.png', alt='SocketStream Logo', width=160, height=160)
-      h1 Welcome to your new realtime app!
-      
-      // QUICK CHAT DEMO
-      form#demo(onsubmit='return false')
-        h3 Quick Chat Demo
-        h5 Open this page in multiple tabs or browsers and type a message below
-        #chatlog
-        input(id='myMessage', type='text', autocomplete='off')
+      form#room-form
+        input#room-name(type="text", value="", autocomplete='off', placeholder='Enter a room name')
+      #video-wrap
+        a(href="http://www.adobe.com/go/getflashplayer", target="_blank")
+          img(alt="Get Flash", src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif")
+      form#yt-form.hide
+        input(id='yt-link', type='text', placeholder="Enter a YouTube link", autocomplete='off')
