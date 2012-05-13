@@ -15,7 +15,7 @@ ss.server.on 'ready', ->
     
     return unless room_s?
     
-    ss.rpc "app.room_data", room_s, (data) ->
+    ss.rpc "app.join_room", room_s, (data) ->
       console.log "TODO room data cb", data
     
     $("#yt-form").show(0)

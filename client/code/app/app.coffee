@@ -6,6 +6,8 @@ window.onYouTubePlayerReady = (player_id) ->
   ytplayer = document.getElementById("ytPlayer")
   ytplayer.setVolume(50)
 
+ss.event.on "receive_video", (yt_id) ->
+  ytplayer.loadVideoById(yt_id)
 
 $("#room-form").submit (e) ->
   e.preventDefault()
@@ -21,6 +23,7 @@ $("#yt-form").submit (e) ->
   return alert("That video is currently playing") if current_yt_id is yt_id
   current_yt_id = yt_id
   ytplayer.loadVideoById(yt_id)
+  ss.rpc('app.send_video', window.room_s, yt_id)
 
 yt_id_from_url = (url) ->
   match = /(?:youtube.com\/watch\?[^\s]*v=|youtu.be\/)([-_\w]+)/.exec url
