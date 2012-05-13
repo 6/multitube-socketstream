@@ -7,6 +7,7 @@ window.onYouTubePlayerReady = (player_id) ->
   ytplayer.setVolume(50)
 
 ss.event.on "receive_video", (yt_id) ->
+  current_yt_id = yt_id
   ytplayer.loadVideoById(yt_id)
 
 $("#room-form").submit (e) ->
